@@ -1,0 +1,35 @@
+{
+  "name": "highly-confidential-encoder-decoder",
+  "version": "1.0.0",
+  "description": "A secure, web-based encryption and encoding toolkit for protecting sensitive data",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "serve": "python -m http.server 8000",
+    "deploy": "echo 'Ready for GitHub Pages deployment'",
+    "test": "echo 'No tests specified'"
+  },
+  "keywords": [
+    "encryption",
+    "decryption",
+    "encoding",
+    "security",
+    "cryptography",
+    "web-crypto-api",
+    "aes",
+    "base64",
+    "hash"
+  ],
+  "author": "Confidential Systems",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/highly-confidential-encoder-decoder"
+  },
+  "homepage": "https://yourusername.github.io/highly-confidential-encoder-decoder/",
+  "devDependencies": {},
+  "dependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Highly Confidential Encoder & Decoder</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Security Questions Modal -->
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-modal">
+            <div class="auth-header">
+                <i class="fas fa-shield-alt"></i>
+                <h2>Security Verification</h2>
+                <p>Please answer these security questions to access the encoder/decoder</p>
+            </div>
+            
+            <form class="auth-form" id="authForm">
+                <div class="question-group">
+                    <label for="question1">
+                        <i class="fas fa-star"></i>
+                        What is Aman's favorite actor?
+                    </label>
+                    <input type="text" id="question1" placeholder="Enter the actor's name" required>
+                </div>
+                
+                <div class="question-group">
+                    <label for="question2">
+                        <i class="fas fa-paw"></i>
+                        What is Aman's favorite animal?
+                    </label>
+                    <input type="text" id="question2" placeholder="Enter the animal" required>
+                </div>
+                
+                <div class="question-group">
+                    <label for="question3">
+                        <i class="fas fa-user-friends"></i>
+                        Who is Aman's best friend?
+                    </label>
+                    <input type="text" id="question3" placeholder="Enter the friend's name" required>
+                </div>
+                
+                <div class="auth-buttons">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-unlock"></i>
+                        Verify & Access
+                    </button>
+                </div>
+                
+                <div class="auth-hint">
+                    <i class="fas fa-info-circle"></i>
+                    <small>All answers are case-insensitive. Contact Aman if you need access.</small>
+                </div>
+            </form>
+            
+            <div class="auth-error" id="authError" style="display: none;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>Incorrect answers. Access denied.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application (Hidden until authenticated) -->
+    <div class="container" id="mainApp" style="display: none;">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <h1>Highly Confidential Encoder & Decoder</h1>
+            </div>
+            <p class="subtitle">Military-grade encryption for sensitive data</p>
+            <div class="header-controls">
+                <button class="btn btn-secondary logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="encrypt">
+                    <i class="fas fa-lock"></i>
+                    Encrypt & Encode
+                </button>
+                <button class="tab-btn" data-tab="decrypt">
+                    <i class="fas fa-unlock"></i>
+                    Decrypt & Decode
+                </button>
+                <button class="tab-btn" data-tab="hash">
+                    <i class="fas fa-fingerprint"></i>
+                    Hash & Verify
+                </button>
+            </div>
+
+            <!-- Encrypt Tab -->
+            <div class="tab-content active" id="encrypt">
+                <div class="card">
+                    <h2><i class="fas fa-shield-alt"></i> Encryption & Encoding</h2>
+                    
+                    <div class="input-group">
+                        <label for="plaintext">Secret Message</label>
+                        <textarea id="plaintext" placeholder="Enter your confidential message here..." rows="4"></textarea>
+                    </div>
+
+                    <div class="options-grid">
+                        <div class="input-group">
+                            <label for="password">Password (Required for encryption)</label>
+                            <div class="password-input">
+                                <input type="password" id="password" placeholder="Enter strong password">
+                                <button type="button" class="toggle-password" onclick="togglePassword('password')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="algorithm">Encryption Algorithm</label>
+                            <select id="algorithm">
+                                <option value="aes-gcm">AES-256-GCM (Recommended)</option>
+                                <option value="aes-cbc">AES-256-CBC</option>
+                                <option value="chacha20">ChaCha20-Poly1305</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="encoding">Output Encoding</label>
+                            <select id="encoding">
+                                <option value="base64">Base64 (Standard)</option>
+                                <option value="base64url">Base64 URL-Safe</option>
+                                <option value="hex">Hexadecimal</option>
+                                <option value="base32">Base32</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="iterations">Key Iterations</label>
+                            <select id="iterations">
+                                <option value="100000">100,000 (Fast)</option>
+                                <option value="250000" selected>250,000 (Balanced)</option>
+                                <option value="500000">500,000 (Secure)</option>
+                                <option value="1000000">1,000,000 (Maximum)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="encryptData()">
+                            <i class="fas fa-lock"></i>
+                            Encrypt & Encode
+                        </button>
+                        <button class="btn btn-secondary" onclick="generatePassword()">
+                            <i class="fas fa-key"></i>
+                            Generate Password
+                        </button>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="encrypted-output">Encrypted Output</label>
+                        <textarea id="encrypted-output" readonly rows="6" placeholder="Encrypted data will appear here..."></textarea>
+                        <button class="copy-btn" onclick="copyToClipboard('encrypted-output')">
+                            <i class="fas fa-copy"></i>
+                            Copy
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decrypt Tab -->
+            <div class="tab-content" id="decrypt">
+                <div class="card">
+                    <h2><i class="fas fa-unlock"></i> Decryption & Decoding</h2>
+                    
+                    <div class="input-group">
+                        <label for="encrypted-input">Encrypted Data</label>
+                        <textarea id="encrypted-input" placeholder="Paste your encrypted data here..." rows="4"></textarea>
+                    </div>
+
+                    <div class="options-grid">
+                        <div class="input-group">
+                            <label for="decrypt-password">Password</label>
+                            <div class="password-input">
+                                <input type="password" id="decrypt-password" placeholder="Enter password">
+                                <button type="button" class="toggle-password" onclick="togglePassword('decrypt-password')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="decrypt-algorithm">Encryption Algorithm</label>
+                            <select id="decrypt-algorithm">
+                                <option value="aes-gcm">AES-256-GCM</option>
+                                <option value="aes-cbc">AES-256-CBC</option>
+                                <option value="chacha20">ChaCha20-Poly1305</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="input-encoding">Input Encoding</label>
+                            <select id="input-encoding">
+                                <option value="base64">Base64</option>
+                                <option value="base64url">Base64 URL-Safe</option>
+                                <option value="hex">Hexadecimal</option>
+                                <option value="base32">Base32</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="decrypt-iterations">Key Iterations</label>
+                            <select id="decrypt-iterations">
+                                <option value="100000">100,000</option>
+                                <option value="250000" selected>250,000</option>
+                                <option value="500000">500,000</option>
+                                <option value="1000000">1,000,000</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="decryptData()">
+                            <i class="fas fa-unlock"></i>
+                            Decrypt & Decode
+                        </button>
+                        <button class="btn btn-secondary" onclick="analyzeData()">
+                            <i class="fas fa-search"></i>
+                            Analyze Format
+                        </button>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="decrypted-output">Decrypted Output</label>
+                        <textarea id="decrypted-output" readonly rows="6" placeholder="Decrypted data will appear here..."></textarea>
+                        <button class="copy-btn" onclick="copyToClipboard('decrypted-output')">
+                            <i class="fas fa-copy"></i>
+                            Copy
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hash Tab -->
+            <div class="tab-content" id="hash">
+                <div class="card">
+                    <h2><i class="fas fa-fingerprint"></i> Hash & Verification</h2>
+                    
+                    <div class="input-group">
+                        <label for="hash-input">Input Data</label>
+                        <textarea id="hash-input" placeholder="Enter data to hash..." rows="4"></textarea>
+                    </div>
+
+                    <div class="options-grid">
+                        <div class="input-group">
+                            <label for="hash-algorithm">Hash Algorithm</label>
+                            <select id="hash-algorithm">
+                                <option value="sha256">SHA-256</option>
+                                <option value="sha512">SHA-512</option>
+                                <option value="sha1">SHA-1 (Legacy)</option>
+                                <option value="md5">MD5 (Legacy)</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="hash-format">Output Format</label>
+                            <select id="hash-format">
+                                <option value="hex">Hexadecimal</option>
+                                <option value="base64">Base64</option>
+                                <option value="base32">Base32</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="generateHash()">
+                            <i class="fas fa-fingerprint"></i>
+                            Generate Hash
+                        </button>
+                        <button class="btn btn-secondary" onclick="verifyHash()">
+                            <i class="fas fa-check"></i>
+                            Verify Hash
+                        </button>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="hash-output">Hash Output</label>
+                        <textarea id="hash-output" readonly rows="4" placeholder="Hash will appear here..."></textarea>
+                        <button class="copy-btn" onclick="copyToClipboard('hash-output')">
+                            <i class="fas fa-copy"></i>
+                            Copy
+                        </button>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="verify-hash">Hash to Verify</label>
+                        <input type="text" id="verify-hash" placeholder="Paste hash to verify against input data">
+                        <div id="verification-result"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="security-notice">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Security Notice:</strong> All encryption is performed client-side. No data is sent to servers.
+                Use strong passwords and keep them secure.
+            </div>
+            <div class="credits">
+                <p>&copy; 2025 Highly Confidential Encoder & Decoder. For authorized use only.</p>
+            </div>
+        </footer>
+    </div>
+
+    <div class="notification" id="notification"></div>
+    
+    <script src="crypto.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
